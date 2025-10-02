@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Plantio - AgroCitro</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="registrar-body">
+    <div class="registrar-header">
+        <h1>Registrar Novo Plantio</h1>
+        <p>Preencha os dados abaixo para registrar no banco de dados</p>
+    </div>
+    
+    <div class="registrar-container">
+        <div class="card">
+            <div id="alert" class="alert"></div>
+            
+            <form id="plantio-form">
+                <div class="form-group">
+                    <label for="variedade">Variedade da Laranja</label>
+                    <select id="variedade" required>
+                        <option value="">Selecione a variedade</option>
+                        <option value="Pera">Pera</option>
+                        <option value="Valência">Valência</option>
+                        <option value="Natal">Natal</option>
+                        <option value="Lima">Lima</option>
+                        <option value="Bahia">Bahia</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="data_plantio">Data do Plantio</label>
+                    <input type="date" id="data_plantio" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quantidade">Quantidade de Mudas</label>
+                    <input type="number" id="quantidade" min="1" required placeholder="Ex: 150">
+                </div>
+                
+                <div class="form-group">
+                    <label for="localizacao">Localização no Pomar</label>
+                    <input type="text" id="localizacao" required placeholder="Ex: Setor A">
+                </div>
+                
+                <button type="submit" class="btn-registrar">Registrar no Banco de Dados</button>
+            </form>
+            
+            <button onclick="window.location.href='index.html'" class="btn-registrar btn-back">Voltar para Início</button>
+        </div>
+
+        <div class="tabela-container">
+            <h2>Plantios Registrados</h2>
+            <div id="tabela-plantios">
+                <p>Carregando dados...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

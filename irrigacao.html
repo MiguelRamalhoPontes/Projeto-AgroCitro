@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Irrigação - AgroCitro</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="registrar-body">
+    <div class="registrar-header">
+        <h1>Registrar Irrigação</h1>
+        <p>Controle dos horários de irrigação dos plantios</p>
+    </div>
+    
+    <div class="registrar-container">
+        <div class="card">
+            <div id="alert" class="alert"></div>
+            
+            <form id="irrigacao-form">
+                <div class="form-group">
+                    <label for="id_plantio">ID do Plantio</label>
+                    <input type="number" id="id_plantio" min="1" required placeholder="Ex: 1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="horario_inicial">Horário Inicial</label>
+                    <input type="time" id="horario_inicial" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="horario_final">Horário Final</label>
+                    <input type="time" id="horario_final" required>
+                </div>
+                
+                <button type="submit" class="btn-registrar">Registrar Irrigação</button>
+            </form>
+            
+            <button onclick="window.location.href='index.html'" class="btn-registrar btn-back">Voltar para Início</button>
+        </div>
+
+        <div class="tabela-container">
+            <h2>Irrigações Registradas</h2>
+            <div id="tabela-irrigacoes">
+                <p>Carregando dados...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
