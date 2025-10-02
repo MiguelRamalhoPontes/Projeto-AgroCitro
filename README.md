@@ -272,9 +272,6 @@ mysql -u root -p agricultura < database/backup_agricultura.sql
 - `GET /colheitas` - Listar colheitas
 
 ---
-
-**Desenvolvido por:** Miguel Pontes, Kaio Vinicius, Thierry Vinicius, Emanuel Ferreti
-
 ## Arquivos do Projeto
 
 ### package.json
@@ -551,5 +548,3 @@ module.exports = {
     listarColheitas
 };
 ```
-
-Agora o projeto está completo seguindo exatamente a estrutura e comandos do seu README original!
