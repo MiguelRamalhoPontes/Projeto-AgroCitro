@@ -1,10 +1,32 @@
-# AgroCitro
+# AgroCitro - Sistema de Gestão Agrícola
 
 ## Grupo
-- Miguel Pontes
-- Kaio Vinicius
-- Thierry Vinicius
-- Emanuel Ferreti
+- Miguel Ramalho Pontes
+- Kaio Vinicius Ramos do Nascimento 
+- Thierry Vinicius de Souza Farias
+- Emanuel Ferreti Silva
+
+## Estrutura do Projeto
+
+```
+AgroCitro/
+├── index.html
+├── registrar.html
+├── irrigacao.html
+├── colheita.html
+├── css/
+│   └── style.css
+├── js/
+│   └── script.js
+├── servidor/
+│   ├── server.js
+│   └── repositorio/
+│       └── bancoDados.js
+├── database/
+│   └── backup_agricultura.sql
+├── package.json
+└── README.md
+```
 
 ## Configuração do Ambiente
 
@@ -167,6 +189,44 @@ SELECT * FROM Colheita;
 2. Verifique se os links estão funcionando corretamente
 3. Teste o botão "Voltar para Início" em todas as páginas
 
+## Backup do Banco de Dados
+
+O backup do banco de dados está localizado em `database/backup_agricultura.sql` e contém:
+
+- Estrutura completa das tabelas
+- Dados de exemplo para teste
+- Relacionamentos e constraints
+
+Para restaurar o backup:
+
+```bash
+mysql -u root -p agricultura < database/backup_agricultura.sql
+```
+
+## Scripts de Inicialização
+
+### package.json
+```json
+{
+  "name": "agrocitro",
+  "version": "1.0.0",
+  "description": "Sistema de gestão agrícola para citricultura",
+  "main": "servidor/server.js",
+  "scripts": {
+    "start": "node servidor/server.js",
+    "dev": "node servidor/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "mysql2": "^3.6.0"
+  },
+  "keywords": ["agricultura", "citricultura", "gestão"],
+  "author": "Grupo AgroCitro",
+  "license": "MIT"
+}
+```
+
 ## Solução de Problemas Comuns
 
 ### Erro de Conexão com o Banco
@@ -193,3 +253,303 @@ SELECT * FROM Colheita;
 - Confirme a conexão com a internet
 - Verifique se o servidor está acessível
 
+## Desenvolvimento
+
+### Estrutura de Desenvolvimento
+
+- **Frontend**: HTML, CSS, JavaScript vanilla
+- **Backend**: Node.js com Express
+- **Banco de Dados**: MySQL
+- **Arquitetura**: MVC (Model-View-Controller)
+
+### Endpoints da API
+
+- `POST /plantios` - Registrar novo plantio
+- `GET /plantios` - Listar todos os plantios
+- `POST /irrigacoes` - Registrar irrigação
+- `GET /irrigacoes` - Listar irrigações
+- `POST /colheitas` - Registrar colheita
+- `GET /colheitas` - Listar colheitas
+
+---
+
+**Desenvolvido por:** Miguel Pontes, Kaio Vinicius, Thierry Vinicius, Emanuel Ferreti
+
+## Arquivos do Projeto
+
+### package.json
+```json
+{
+  "name": "agrocitro",
+  "version": "1.0.0",
+  "description": "Sistema de gestão agrícola para citricultura",
+  "main": "servidor/server.js",
+  "scripts": {
+    "start": "node servidor/server.js",
+    "dev": "node servidor/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "mysql2": "^3.6.0"
+  },
+  "keywords": ["agricultura", "citricultura", "gestão"],
+  "author": "Grupo AgroCitro",
+  "license": "MIT"
+}
+```
+
+### database/backup_agricultura.sql
+```sql
+-- Backup do Banco de Dados Agricultura
+-- AgroCitro - Sistema de Gestão Agrícola
+
+CREATE DATABASE IF NOT EXISTS agricultura;
+USE agricultura;
+
+-- Tabela de Plantios
+CREATE TABLE IF NOT EXISTS Plantio (
+    ID_Plantio INT AUTO_INCREMENT PRIMARY KEY,
+    Variedade VARCHAR(50) NOT NULL,
+    Data_Plantio DATE NOT NULL,
+    Quantidade_Plantada INT NOT NULL,
+    Localizacao VARCHAR(100) NOT NULL
+);
+
+-- Tabela de Irrigações
+CREATE TABLE IF NOT EXISTS Irrigacao (
+    ID_Irrigacao INT AUTO_INCREMENT PRIMARY KEY,
+    ID_Plantio INT NOT NULL,
+    Horario_Inicial TIME NOT NULL,
+    Horario_Final TIME NOT NULL,
+    FOREIGN KEY (ID_Plantio) REFERENCES Plantio(ID_Plantio)
+);
+
+-- Tabela de Colheitas
+CREATE TABLE IF NOT EXISTS Colheita (
+    ID_Colheita INT AUTO_INCREMENT PRIMARY KEY,
+    ID_Plantio INT NOT NULL,
+    Data_Colheita DATE NOT NULL,
+    Quantidade_Colhida INT NOT NULL,
+    Qualidade VARCHAR(20) NOT NULL,
+    FOREIGN KEY (ID_Plantio) REFERENCES Plantio(ID_Plantio)
+);
+
+-- Dados de exemplo para Plantios
+INSERT INTO Plantio (Variedade, Data_Plantio, Quantidade_Plantada, Localizacao) VALUES
+('Pera', '2024-01-15', 200, 'Setor A - Lote 1'),
+('Valência', '2024-02-10', 150, 'Setor B - Lote 2'),
+('Natal', '2024-01-30', 180, 'Setor A - Lote 3'),
+('Lima', '2024-03-05', 120, 'Setor C - Lote 1');
+
+-- Dados de exemplo para Irrigações
+INSERT INTO Irrigacao (ID_Plantio, Horario_Inicial, Horario_Final) VALUES
+(1, '08:00:00', '10:00:00'),
+(1, '14:00:00', '16:00:00'),
+(2, '09:00:00', '11:00:00'),
+(3, '07:30:00', '09:30:00');
+
+-- Dados de exemplo para Colheitas
+INSERT INTO Colheita (ID_Plantio, Data_Colheita, Quantidade_Colhida, Qualidade) VALUES
+(1, '2024-06-15', 850, 'Excelente'),
+(2, '2024-07-20', 720, 'Boa'),
+(3, '2024-06-30', 650, 'Regular');
+```
+
+### servidor/server.js
+```javascript
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+const bancoDados = require('./repositorio/bancoDados');
+
+const app = express();
+const PORT = 3000;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.static('.'));
+
+// Rotas para Plantios
+app.post('/plantios', async (req, res) => {
+    try {
+        const { variedade, dataPlantio, quantidade, localizacao } = req.body;
+        const resultado = await bancoDados.inserirPlantio(variedade, dataPlantio, quantidade, localizacao);
+        res.json({ id: resultado.insertId, mensagem: 'Plantio registrado com sucesso' });
+    } catch (erro) {
+        console.error('Erro ao registrar plantio:', erro);
+        res.status(500).json({ erro: 'Erro interno do servidor' });
+    }
+});
+
+app.get('/plantios', async (req, res) => {
+    try {
+        const plantios = await bancoDados.listarPlantios();
+        res.json(plantios);
+    } catch (erro) {
+        console.error('Erro ao buscar plantios:', erro);
+        res.status(500).json({ erro: 'Erro interno do servidor' });
+    }
+});
+
+// Rotas para Irrigações
+app.post('/irrigacoes', async (req, res) => {
+    try {
+        const { idPlantio, horarioInicial, horarioFinal } = req.body;
+        const resultado = await bancoDados.inserirIrrigacao(idPlantio, horarioInicial, horarioFinal);
+        res.json({ id: resultado.insertId, mensagem: 'Irrigação registrada com sucesso' });
+    } catch (erro) {
+        console.error('Erro ao registrar irrigação:', erro);
+        res.status(500).json({ erro: 'Erro interno do servidor' });
+    }
+});
+
+app.get('/irrigacoes', async (req, res) => {
+    try {
+        const irrigacoes = await bancoDados.listarIrrigacoes();
+        res.json(irrigacoes);
+    } catch (erro) {
+        console.error('Erro ao buscar irrigações:', erro);
+        res.status(500).json({ erro: 'Erro interno do servidor' });
+    }
+});
+
+// Rotas para Colheitas
+app.post('/colheitas', async (req, res) => {
+    try {
+        const { idPlantio, dataColheita, quantidade, qualidade } = req.body;
+        const resultado = await bancoDados.inserirColheita(idPlantio, dataColheita, quantidade, qualidade);
+        res.json({ id: resultado.insertId, mensagem: 'Colheita registrada com sucesso' });
+    } catch (erro) {
+        console.error('Erro ao registrar colheita:', erro);
+        res.status(500).json({ erro: 'Erro interno do servidor' });
+    }
+});
+
+app.get('/colheitas', async (req, res) => {
+    try {
+        const colheitas = await bancoDados.listarColheitas();
+        res.json(colheitas);
+    } catch (erro) {
+        console.error('Erro ao buscar colheitas:', erro);
+        res.status(500).json({ erro: 'Erro interno do servidor' });
+    }
+});
+
+// Rota para a página principal
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../index.html'));
+});
+
+// Inicialização do servidor
+app.listen(PORT, () => {
+    console.log(`Servidor da AgroCitro rodando na porta ${PORT}`);
+});
+```
+
+### servidor/repositorio/bancoDados.js
+```javascript
+const mysql = require('mysql2');
+
+// Configuração do banco de dados - ATUALIZE COM SUAS CREDENCIAIS
+const pool = mysql.createPool({
+    host: "127.0.0.1",
+    user: "root",
+    password: "sua_senha_aqui", // ALTERE PARA SUA SENHA DO MYSQL
+    database: "agricultura",
+    port: 3306
+});
+
+// Funções para Plantio
+async function inserirPlantio(variedade, dataPlantio, quantidade, localizacao) {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO Plantio (Variedade, Data_Plantio, Quantidade_Plantada, Localizacao) VALUES (?, ?, ?, ?)';
+        pool.execute(query, [variedade, dataPlantio, quantidade, localizacao], (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+async function listarPlantios() {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM Plantio ORDER BY Data_Plantio DESC';
+        pool.execute(query, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+// Funções para Irrigação
+async function inserirIrrigacao(idPlantio, horarioInicial, horarioFinal) {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO Irrigacao (ID_Plantio, Horario_Inicial, Horario_Final) VALUES (?, ?, ?)';
+        pool.execute(query, [idPlantio, horarioInicial, horarioFinal], (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+async function listarIrrigacoes() {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM Irrigacao ORDER BY Horario_Inicial DESC';
+        pool.execute(query, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+// Funções para Colheita
+async function inserirColheita(idPlantio, dataColheita, quantidade, qualidade) {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO Colheita (ID_Plantio, Data_Colheita, Quantidade_Colhida, Qualidade) VALUES (?, ?, ?, ?)';
+        pool.execute(query, [idPlantio, dataColheita, quantidade, qualidade], (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+async function listarColheitas() {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM Colheita ORDER BY Data_Colheita DESC';
+        pool.execute(query, (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
+
+module.exports = {
+    inserirPlantio,
+    listarPlantios,
+    inserirIrrigacao,
+    listarIrrigacoes,
+    inserirColheita,
+    listarColheitas
+};
+```
+
+Agora o projeto está completo seguindo exatamente a estrutura e comandos do seu README original!
